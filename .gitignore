@@ -1,0 +1,14 @@
+# Dashboard HTML sinh ra — mỗi người tự generate local, tránh xung đột merge
+brain/dashboard/
+
+# effective-html — cài lại bằng: npx skills add plannotator/effective-html
+.agents/
+.claude/skills/html
+.claude/skills/html-diagram
+.claude/skills/html-plan
+
+# Cấu hình cá nhân (không chia sẻ)
+.claude/settings.local.json
+
+# OS / editor
+.DS_Store

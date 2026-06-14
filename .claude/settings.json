@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(git init *)",
+      "Bash(mkdir -p docs/superpowers/specs)",
+      "Edit(/.claude/skills/brain/**)"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "user": "conght",
+  "updated": "2026-06-14",
+  "current_focus": "Khởi tạo bộ não tư duy",
+  "features": [
+    {
+      "name": "Bộ não tư duy (hệ thống)",
+      "status": "in_progress",
+      "progress": 60,
+      "research_report": null,
+      "notes": "Dựng cấu trúc + skills. Tiếp theo: thêm sản phẩm + đối thủ thật, generate dashboard."
+    }
+  ]
+}
