@@ -4,7 +4,8 @@
       "WebFetch(domain:github.com)",
       "Bash(git init *)",
       "Bash(mkdir -p docs/superpowers/specs)",
-      "Edit(/.claude/skills/brain/**)"
+      "Edit(/.claude/skills/brain/**)",
+      "Bash(git config *)"
     ]
   }
 }
