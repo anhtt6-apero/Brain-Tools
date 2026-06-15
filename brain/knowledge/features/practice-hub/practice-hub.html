@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Practice Hub — Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F172A; --ink-soft:#475569; --ink-faint:#94A3B8;
+  --line:#E8EDF3; --line-soft:#F1F5F9; --bg:#FBFCFE; --surface:#FFFFFF;
+  --brand:#0060CF; --brand-soft:#EBF3FF; --brand-line:#CFE2FB;
+  --green:#0E9F6E; --green-soft:#ECFDF5; --green-line:#BBF7D9;
+  --amber:#B45309; --amber-soft:#FFFBEB; --amber-line:#FDE9B5;
+  --violet:#6D28D9; --violet-soft:#F5F3FF; --violet-line:#E4DCFB;
+  --red:#DC2626; --red-soft:#FEF2F2; --red-line:#FBD5D5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:15px;letter-spacing:-0.003em}
+.doc{max-width:900px;margin:0 auto;padding:60px 32px 100px}
+
+.hdr{margin-bottom:40px}
+.hdr-eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin-bottom:14px}
+.hdr h1{font-size:38px;font-weight:800;letter-spacing:-0.025em;line-height:1.1;margin-bottom:14px}
+.hdr-lead{font-size:16px;color:var(--ink-soft);margin-bottom:18px;max-width:64ch}
+.hdr-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.meta-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-weight:500}
+.badge{padding:4px 11px;border-radius:7px;font-size:11px;font-weight:700;letter-spacing:.04em}
+.badge-draft{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber-line)}
+.badge-v{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line)}
+
+.toc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin-bottom:48px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.toc-title{font-size:11px;font-weight:700;color:var(--ink-faint);letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+.toc-list{display:grid;grid-template-columns:1fr 1fr;gap:1px 28px}
+.toc-item{font-size:14px;color:var(--ink);text-decoration:none;padding:8px 0;display:flex;gap:11px;align-items:center;font-weight:500;border-bottom:1px solid var(--line-soft);transition:color .15s}
+.toc-item:hover{color:var(--brand)}
+.toc-num{width:23px;height:23px;background:var(--brand-soft);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brand);flex-shrink:0}
+
+.section{margin-bottom:56px;scroll-margin-top:24px}
+.stitle{font-size:13px;font-weight:700;color:var(--brand);letter-spacing:.04em;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.snum{min-width:30px;height:30px;padding:0 8px;background:var(--brand);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.shead{font-size:26px;font-weight:800;letter-spacing:-0.022em;line-height:1.18;margin-bottom:12px}
+.slead{font-size:16px;color:var(--ink-soft);margin-bottom:22px;max-width:64ch}
+h3{font-size:18px;font-weight:700;letter-spacing:-0.015em;margin:30px 0 12px}
+h4{font-size:14px;font-weight:700;margin:20px 0 8px}
+p{font-size:15px;margin-bottom:12px;color:var(--ink-soft)}
+p strong,td strong,li strong{color:var(--ink);font-weight:600}
+ul,ol{margin:12px 0 12px 20px}
+li{font-size:14.5px;color:var(--ink-soft);margin-bottom:7px}
+
+.tbl-wrap{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:16px 0;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{padding:12px 15px;background:var(--line-soft);color:var(--ink-soft);font-weight:600;text-align:left;font-size:12px;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--line)}
+td{padding:12px 15px;border-bottom:1px solid var(--line-soft);vertical-align:top;line-height:1.55;color:var(--ink-soft)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+
+code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--brand-soft);padding:2px 6px;border-radius:5px;color:var(--brand);font-weight:500}
+pre{background:#0F172A;border-radius:14px;padding:20px 22px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#E2E8F0;margin:16px 0;line-height:1.7}
+pre code{background:none;color:inherit;padding:0}
+pre .cmt{color:#64748B}
+
+.callout{border-radius:12px;padding:15px 18px;font-size:14px;line-height:1.6;margin:18px 0;border:1px solid;display:flex;gap:12px}
+.callout::before{font-size:16px;flex-shrink:0}
+.callout-info{background:var(--brand-soft);border-color:var(--brand-line);color:#1E40AF}
+.callout-info::before{content:"ℹ️"}
+.callout-warn{background:var(--amber-soft);border-color:var(--amber-line);color:var(--amber)}
+.callout-warn::before{content:"⚠️"}
+.callout-ok{background:var(--green-soft);border-color:var(--green-line);color:#047857}
+.callout-ok::before{content:"✅"}
+.callout strong{color:inherit;font-weight:700}
+
+.flow-list{counter-reset:step;list-style:none;margin:16px 0 0}
+.flow-list li{position:relative;padding:0 0 14px 38px;margin:0;border-left:2px solid var(--line);margin-left:13px}
+.flow-list li:last-child{border-left:2px solid transparent}
+.flow-list li::before{counter-increment:step;content:counter(step);position:absolute;left:-13px;top:-2px;width:26px;height:26px;background:var(--brand);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+
+.tag{display:inline-block;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700;white-space:nowrap}
+.tag-user{background:var(--violet-soft);color:var(--violet)}
+.tag-cms{background:var(--amber-soft);color:var(--amber)}
+.tag-ai{background:var(--brand-soft);color:var(--brand)}
+.tag-pass{background:var(--green-soft);color:var(--green)}
+.tag-err{background:var(--red-soft);color:var(--red)}
+.tag-auto{background:var(--line-soft);color:var(--ink-soft)}
+
+.rule-card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;padding:14px 18px;margin:12px 0;box-shadow:0 1px 2px rgba(15,23,42,.03)}
+.rule-card .rid{font-size:12px;font-weight:700;color:var(--brand);letter-spacing:.03em;margin-bottom:5px}
+.rule-card p{margin:0;font-size:14px}
+
+.q-card{background:var(--amber-soft);border:1px solid var(--amber-line);border-left:4px solid var(--amber);border-radius:0 12px 12px 0;padding:13px 16px;margin:10px 0;font-size:14px}
+.q-card b{color:var(--amber)}
+
+.resolved{background:var(--green-soft);border:1px solid var(--green-line);border-radius:14px;padding:18px 20px;margin:18px 0 44px}
+.resolved-t{font-size:13px;font-weight:700;color:#047857;letter-spacing:.03em;text-transform:uppercase;margin-bottom:12px}
+.resolved table{font-size:13px}
+.resolved th{background:#D6F5E6}
+
+/* Diagram */
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;margin:20px 0;overflow-x:auto;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+
+/* Wireframes */
+.wire-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px;margin:20px 0}
+.wire-item{display:flex;flex-direction:column;align-items:center}
+.phone{width:220px;height:430px;background:#fff;border:6px solid #0F172A;border-radius:28px;overflow:hidden;position:relative;box-shadow:0 6px 22px rgba(15,23,42,.14)}
+.sbar{height:26px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:9px;font-weight:600;color:#0F172A}
+.scr{height:calc(100% - 26px);overflow:hidden;background:#F8FAFE}
+.wire-cap{font-size:12px;color:var(--ink-soft);margin-top:10px;text-align:center;font-weight:600}
+.wire-cap small{display:block;color:var(--ink-faint);font-weight:400;font-size:11px;margin-top:2px}
+.ws-hd{background:#fff;padding:10px 12px;border-bottom:1px solid #eef1f5;font-size:13px;font-weight:700;color:#0F172A}
+.ws-card{background:#fff;border:1px solid #eef1f5;border-radius:10px;padding:10px;margin:8px 10px;display:flex;align-items:center;gap:9px}
+.ws-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ws-t{font-size:11.5px;font-weight:700;color:#0F172A}
+.ws-s{font-size:10px;color:#94A3B8;margin-top:1px}
+.ws-sheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -3px 16px rgba(15,23,42,.12);padding:14px}
+.ws-grab{width:30px;height:3px;background:#ddd;border-radius:2px;margin:0 auto 12px}
+.ws-toast{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#0F172A;color:#fff;border-radius:14px;padding:5px 12px;font-size:10px;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="doc">
+
+<div class="hdr">
+  <div class="hdr-eyebrow">Feature Specification</div>
+  <h1>Practice Hub</h1>
+  <div class="hdr-lead">Trung tâm ôn tập cá nhân hóa của Interact.ai. Tài liệu là nguồn upstream: Dev derive plan dev, QA derive test case. Mọi requirement phải suy ra được, không đoán.</div>
+  <div class="hdr-meta">
+    <span class="meta-chip">📱 Interact.ai · iOS + Android</span>
+    <span class="meta-chip">📅 15 Jun 2026</span>
+    <span class="badge badge-v">v1.0.0</span>
+    <span class="badge badge-draft">DRAFT</span>
+    <span class="meta-chip">PO: Cong Ho</span>
+  </div>
+</div>
+
+<div class="callout callout-info"><div>Nguồn sự thật là <code>specs/practice-hub.md</code>. Bản HTML này để review trực quan.</div></div>
+
+<div class="toc">
+  <div class="toc-title">Nội dung</div>
+  <div class="toc-list">
+    <a class="toc-item" href="#s1"><span class="toc-num">1</span> Goal</a>
+    <a class="toc-item" href="#s2"><span class="toc-num">2</span> UI cần implement</a>
+    <a class="toc-item" href="#swire"><span class="toc-num">🖼</span> Wireframes</a>
+    <a class="toc-item" href="#s3"><span class="toc-num">3</span> Scope & Entry Points</a>
+    <a class="toc-item" href="#s4"><span class="toc-num">4</span> Inputs / Outputs / States</a>
+    <a class="toc-item" href="#s5"><span class="toc-num">5</span> Flow / Behavior</a>
+    <a class="toc-item" href="#sdiag"><span class="toc-num">⇄</span> User Flow Diagrams</a>
+    <a class="toc-item" href="#s6"><span class="toc-num">6</span> Business Rules & Logic</a>
+    <a class="toc-item" href="#s7"><span class="toc-num">7</span> Critical Invariants</a>
+    <a class="toc-item" href="#s8"><span class="toc-num">8</span> Event Tracking</a>
+    <a class="toc-item" href="#s9"><span class="toc-num">9</span> Open Questions</a>
+    <a class="toc-item" href="#s10"><span class="toc-num">10</span> References</a>
+    <a class="toc-item" href="#sac"><span class="toc-num">AC</span> Acceptance Criteria</a>
+    <a class="toc-item" href="#sfm"><span class="toc-num">+</span> Failure / Data / NFR / OOS</a>
+  </div>
+</div>
+
+<div class="resolved">
+  <div class="resolved-t">✓ Conflicts đã resolve (đồng bộ spec hiện có)</div>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:8%">#</th><th>Vấn đề</th><th>Resolution</th></tr>
+    <tr><td><strong>C1</strong></td><td>"Progress Tab" đã thuộc Streak spec</td><td>Practice Hub là <strong>tab riêng độc lập</strong>, không liên quan streak</td></tr>
+    <tr><td><strong>C2</strong></td><td>API naming lệch convention</td><td>Đồng bộ prefix <code>/me/*</code></td></tr>
+    <tr><td><strong>C3</strong></td><td><code>lesson.complete</code> mơ hồ</td><td>Dùng <code>POST /lesson/complete</code></td></tr>
+    <tr><td><strong>C4</strong></td><td>Tự viết lại logic xóa account</td><td>Chỉ đăng ký 4 bảng vào cascade <code>DELETE /me</code></td></tr>
+  </table></div>
+</div>
+
+<!-- 1 -->
+<div class="section" id="s1">
+  <div class="stitle"><span class="snum">1</span>GOAL</div>
+  <div class="shead">Goal</div>
+  <p class="slead">Tăng <strong>D30 retention</strong> bằng cách cho user ôn lại nội dung sinh ra từ chính quá trình học. Gom 3 nguồn data = 3 tính năng.</p>
+  <div class="tbl-wrap"><table>
+    <tr><th>TN</th><th>Tên</th><th>Nguồn</th><th>Cách data sinh ra</th><th>Thao tác</th></tr>
+    <tr><td><strong>TN1</strong></td><td>Từ & câu đã lưu</td><td><span class="tag tag-user">User tự lưu</span></td><td>User chủ động bookmark</td><td>Chủ động</td></tr>
+    <tr><td><strong>TN2</strong></td><td>Khái niệm khóa học</td><td><span class="tag tag-cms">CMS gắn tag</span></td><td>Mark "đã học" khi <code>lesson.complete</code></td><td><span class="tag tag-auto">Tự động</span></td></tr>
+    <tr><td><strong>TN3</strong></td><td>Lỗi ngữ pháp</td><td><span class="tag tag-ai">AI auto-detect</span></td><td>AI phát hiện → sửa inline → auto lưu</td><td><span class="tag tag-auto">Tự động</span></td></tr>
+  </table></div>
+  <div class="callout callout-ok"><div><strong>Phân biệt cốt lõi:</strong> TN1 = user <em>kéo</em> data vào (chủ động). TN2 + TN3 = hệ thống <em>đẩy</em> data vào (tự động). Logic này chi phối toàn bộ flow.</div></div>
+</div>
+
+<!-- 2 -->
+<div class="section" id="s2">
+  <div class="stitle"><span class="snum">2</span>UI</div>
+  <div class="shead">UI cần implement</div>
+  <div class="callout callout-warn"><div>Wireframe bản cũ chỉ tham khảo. Figma chính thức chưa có (Q1).</div></div>
+  <div class="tbl-wrap"><table>
+    <tr><th>UI / component</th><th>Design</th><th>Notes</th></tr>
+    <tr><td>Practice Hub Home (3 card)</td><td>TBD</td><td>Tab riêng. Mỗi card hiện counter + tap → list</td></tr>
+    <tr><td>Bottom sheet lưu từ</td><td>TBD</td><td>Từ + IPA tách âm + nghĩa VI + ví dụ + 🔊 0.7x + 🔖 toggle</td></tr>
+    <tr><td>Action bar message (lưu câu)</td><td>TBD</td><td>Nút 🔖 trên message bubble</td></tr>
+    <tr><td>AI correction block (inline)</td><td>TBD</td><td>Nền teal trong chat khi <code>has_error=true</code></td></tr>
+    <tr><td>TN1 list</td><td>TBD</td><td>2 tab Câu/Từ + search + group theo ngày</td></tr>
+    <tr><td>TN2 list</td><td>TBD</td><td>Group theo bài học + progress %</td></tr>
+    <tr><td>TN3 list</td><td>TBD</td><td>Group theo ngày · sai → đúng → giải thích VI</td></tr>
+    <tr><td>Detail bottom sheet</td><td>TBD</td><td>Info viewer + 🔊 0.7x · <strong>KHÔNG mic</strong></td></tr>
+  </table></div>
+</div>
+
+<!-- WIREFRAMES -->
+<div class="section" id="swire">
+  <div class="stitle"><span class="snum">🖼</span>WIREFRAMES</div>
+  <div class="shead">Wireframe mô tả — toàn bộ tính năng</div>
+  <p class="slead">Low-fidelity, mô tả bố cục & thành phần chính của 8 màn. Đây là wireframe mô tả (không phải design cuối) — visual chính thức theo Figma (Q1).</p>
+
+  <div class="wire-grid">
+
+    <!-- W1 Hub Home -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr">
+        <div class="ws-hd">Practice</div>
+        <div class="ws-card"><div class="ws-ico" style="background:#FFF4E5">🔖</div><div style="flex:1"><div class="ws-t">Từ &amp; câu đã lưu</div><div class="ws-s">6 từ · 12 câu</div></div><span style="color:#cbd5e1">›</span></div>
+        <div class="ws-card"><div class="ws-ico" style="background:#EBF3FF">📘</div><div style="flex:1"><div class="ws-t">Khái niệm khóa học</div><div style="height:4px;background:#EBF3FF;border-radius:2px;margin-top:5px"><div style="width:60%;height:4px;background:#0060CF;border-radius:2px"></div></div></div><span style="color:#cbd5e1">›</span></div>
+        <div class="ws-card"><div class="ws-ico" style="background:#E0F7F7">✏️</div><div style="flex:1"><div class="ws-t">Lỗi ngữ pháp</div><div class="ws-s">AI phát hiện · 3 lỗi</div></div><span style="color:#cbd5e1">›</span></div>
+      </div></div>
+      <div class="wire-cap">W1 · Hub Home<small>3 card entry — counter tóm tắt</small></div>
+    </div>
+
+    <!-- W2 Save word bottom sheet -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr" style="position:relative">
+        <div style="padding:10px;opacity:.3"><div style="background:#fff;border-radius:8px;padding:8px;font-size:11px;color:#334155">...call another car <span style="background:#EBF3FF;color:#0060CF;padding:1px 4px;border-radius:3px">instead</span></div></div>
+        <div class="ws-toast">✓ Đã lưu vào Từ đã lưu</div>
+        <div class="ws-sheet">
+          <div class="ws-grab"></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div style="font-size:19px;font-weight:700;color:#0F172A">Instead</div><div style="display:flex;gap:10px"><span>🔊</span><span style="color:#0060CF">🔖</span></div></div>
+          <div style="font-size:10px;color:#94A3B8">Dịch</div><div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:10px">thay vì</div>
+          <div style="font-size:10px;color:#94A3B8">Phát âm</div><div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:12px">in · sted</div>
+          <div style="width:38px;height:38px;background:#EBF3FF;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:12px">🔊</span><span style="font-size:7px;color:#0060CF;font-weight:700">0.7x</span></div>
+        </div>
+      </div></div>
+      <div class="wire-cap">W2 · Lưu từ (Flow A)<small>tap từ → bottom sheet + 🔖</small></div>
+    </div>
+
+    <!-- W3 Save sentence -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr">
+        <div class="ws-hd" style="text-align:center">Party Planning</div>
+        <div style="background:#fff;border:1px solid #eef1f5;border-radius:10px;padding:10px;margin:10px"><div style="font-size:11px;color:#334155;margin-bottom:8px">Can you blow up these balloons?</div><div style="display:flex;gap:12px;border-top:1px solid #f1f5f9;padding-top:7px"><span style="font-size:12px;color:#94A3B8">🔊</span><span style="font-size:12px;color:#94A3B8">译</span><span style="font-size:13px;color:#0060CF;margin-left:auto">🔖</span></div></div>
+        <div style="text-align:center;margin:10px"><span style="background:#0F172A;color:#fff;border-radius:14px;padding:4px 12px;font-size:10px">✓ Đã lưu mẫu câu</span></div>
+        <div style="background:#fff;border:1px solid #eef1f5;border-radius:10px;padding:10px;margin:10px"><div style="font-size:11px;color:#334155;margin-bottom:8px">She has a collection of barbies.</div><div style="display:flex;gap:12px;border-top:1px solid #f1f5f9;padding-top:7px"><span style="font-size:12px;color:#94A3B8">🔊</span><span style="font-size:12px;color:#94A3B8">译</span><span style="font-size:13px;color:#cbd5e1;margin-left:auto">🔖</span></div></div>
+      </div></div>
+      <div class="wire-cap">W3 · Lưu câu (Flow B)<small>🔖 trên message bubble</small></div>
+    </div>
+
+    <!-- W4 AI correction -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr">
+        <div class="ws-hd" style="text-align:center">Flight Delay</div>
+        <div style="height:3px;background:#eef1f5"><div style="width:35%;height:3px;background:#0060CF"></div></div>
+        <div style="padding:11px">
+          <div style="display:flex;justify-content:flex-end;margin-bottom:8px"><div style="background:#fff;border:1px solid #eef1f5;border-radius:10px 10px 0 10px;padding:7px 10px;font-size:11px;color:#334155">Let mess it up</div></div>
+          <div style="background:#E8F9FF;border:1px solid #B3E8F7;border-radius:10px;padding:9px"><div style="font-size:12px;color:#0891B2;font-weight:700;margin-bottom:5px">Let's mess it up.</div><div style="height:1px;background:#B3E8F7;margin-bottom:6px"></div><div style="font-size:10px;color:#0891B2;line-height:1.5">Ở đây cần dùng "let's" (viết tắt của "let us")...</div></div>
+          <div style="margin-top:8px;background:#FFFBEB;border-radius:6px;padding:7px;font-size:9px;color:#92400E">↳ Tự động lưu vào tab Lỗi ngữ pháp</div>
+        </div>
+      </div></div>
+      <div class="wire-cap">W4 · AI sửa lỗi inline (Flow C)<small>has_error=true → correction block</small></div>
+    </div>
+
+    <!-- W5 TN1 list -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr">
+        <div style="padding:12px 12px 0"><div style="font-size:17px;font-weight:700;color:#0F172A;margin-bottom:10px">Câu đã lưu</div>
+        <div style="background:#eef1f5;border-radius:8px;padding:7px 10px;font-size:11px;color:#94A3B8;margin-bottom:10px">🔍 Tìm kiếm</div>
+        <div style="display:flex;gap:6px;margin-bottom:12px"><div style="padding:6px 12px;background:#fff;border-radius:16px;font-size:11px;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)">Câu đã lưu</div><div style="padding:6px 12px;background:#eef1f5;border-radius:16px;font-size:11px;color:#64748b">Từ đã lưu</div></div>
+        <div style="font-size:10px;color:#94A3B8;margin-bottom:6px">Hôm nay</div></div>
+        <div style="background:#fff;border-radius:10px;margin:0 12px">
+          <div style="display:flex;gap:9px;padding:10px;border-bottom:1px solid #f1f5f9"><span style="color:#0060CF">🔖</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:#0F172A;line-height:1.3">Can you blow up these balloons?</div><div style="font-size:10px;color:#94A3B8">Bạn thổi bóng bay được không?</div></div><span style="color:#cbd5e1">···</span></div>
+          <div style="display:flex;gap:9px;padding:10px"><span style="color:#0060CF">🔖</span><div style="flex:1"><div style="font-size:11px;font-weight:700;color:#0F172A;line-height:1.3">She has a collection of barbies.</div><div style="font-size:10px;color:#94A3B8">Cô ấy có bộ sưu tập búp bê.</div></div><span style="color:#cbd5e1">···</span></div>
+        </div>
+      </div></div>
+      <div class="wire-cap">W5 · TN1 list<small>2 tab Câu/Từ + search</small></div>
+    </div>
+
+    <!-- W6 TN2 curriculum -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr">
+        <div style="padding:12px 12px 0"><div style="font-size:17px;font-weight:700;color:#0F172A;margin-bottom:10px">Khái niệm khóa học</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-size:10px;color:#94A3B8">Bài 3 · Volunteering</div><div style="font-size:10px;font-weight:700;color:#0060CF">100%</div></div></div>
+        <div style="background:#fff;border-radius:10px;margin:0 12px">
+          <div style="display:flex;gap:9px;padding:11px;border-bottom:1px solid #f1f5f9"><span style="color:#0060CF">📘</span><div><div style="font-size:12px;font-weight:700;color:#0F172A">contribute</div><div style="font-size:10px;color:#94A3B8">đóng góp</div></div></div>
+          <div style="display:flex;gap:9px;padding:11px;border-bottom:1px solid #f1f5f9"><span style="color:#0060CF">📘</span><div><div style="font-size:12px;font-weight:700;color:#0F172A">volunteer</div><div style="font-size:10px;color:#94A3B8">tình nguyện</div></div></div>
+          <div style="display:flex;gap:9px;padding:11px"><span style="color:#0060CF">📘</span><div><div style="font-size:12px;font-weight:700;color:#0F172A">community</div><div style="font-size:10px;color:#94A3B8">cộng đồng</div></div></div>
+        </div>
+      </div></div>
+      <div class="wire-cap">W6 · TN2 list<small>group theo bài + progress %</small></div>
+    </div>
+
+    <!-- W7 TN3 grammar -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr">
+        <div style="padding:12px 12px 0"><div style="font-size:17px;font-weight:700;color:#0F172A">Lỗi ngữ pháp</div><div style="font-size:10px;color:#94A3B8;margin-bottom:11px">AI phát hiện · 3 lỗi</div></div>
+        <div style="padding:0 12px"><div style="font-size:10px;font-weight:700;color:#94A3B8;margin-bottom:7px">HÔM NAY</div>
+          <div style="background:#fff;border:1px solid #eef1f5;border-radius:9px;padding:10px;margin-bottom:8px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px"><span style="font-size:10px;color:#EF4444;text-decoration:line-through">Let mess it up</span><span style="color:#cbd5e1">→</span><span style="font-size:11px;color:#22C55E;font-weight:700">Let's mess it up</span></div><div style="font-size:9px;color:#94A3B8;margin-bottom:6px">Cần dùng "let's" (viết tắt "let us")</div><div style="display:flex;gap:10px;border-top:1px solid #f1f5f9;padding-top:6px"><span style="font-size:11px;color:#94A3B8">🔊</span><span style="font-size:11px;color:#94A3B8">译</span></div></div>
+          <div style="background:#fff;border:1px solid #eef1f5;border-radius:9px;padding:10px"><div style="display:flex;gap:6px;align-items:center;margin-bottom:5px"><span style="font-size:10px;color:#EF4444;text-decoration:line-through">call other car</span><span style="color:#cbd5e1">→</span><span style="font-size:11px;color:#22C55E;font-weight:700">call another car</span></div><div style="font-size:9px;color:#94A3B8">"another" khi chọn 1 trong nhiều</div></div>
+        </div>
+      </div></div>
+      <div class="wire-cap">W7 · TN3 list<small>group theo ngày · sai→đúng→giải thích</small></div>
+    </div>
+
+    <!-- W8 Detail sheet -->
+    <div class="wire-item">
+      <div class="phone"><div class="sbar"><span>9:41</span><span>▰▰▰ 🔋</span></div><div class="scr" style="position:relative">
+        <div style="padding:12px;opacity:.35"><div style="font-size:15px;font-weight:700;color:#0F172A;margin-bottom:8px">Từ đã lưu</div><div style="background:#fff;border-radius:8px;padding:9px;display:flex;gap:9px"><span style="color:#0060CF">🔖</span><div><div style="font-size:12px;font-weight:700;color:#0F172A">instead</div><div style="font-size:10px;color:#94A3B8">thay vì</div></div></div></div>
+        <div class="ws-sheet">
+          <div class="ws-grab"></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px"><div style="font-size:19px;font-weight:700;color:#0F172A">Instead</div><div style="display:flex;gap:10px"><span>🔊</span><span style="color:#0060CF">🔖</span></div></div>
+          <div style="font-size:10px;color:#94A3B8">Dịch</div><div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:10px">thay vì</div>
+          <div style="font-size:10px;color:#94A3B8">Phát âm</div><div style="font-size:13px;font-weight:700;color:#0F172A;margin-bottom:12px">in · sted</div>
+          <div style="width:38px;height:38px;background:#EBF3FF;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:12px">🔊</span><span style="font-size:7px;color:#0060CF;font-weight:700">0.7x</span></div>
+          <div style="margin-top:10px;font-size:9px;color:#cbd5e1;font-style:italic">✕ Không có mic luyện phát âm</div>
+        </div>
+      </div></div>
+      <div class="wire-cap">W8 · Detail sheet<small>info viewer · KHÔNG mic</small></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 3 -->
+<div class="section" id="s3">
+  <div class="stitle"><span class="snum">3</span>SCOPE</div>
+  <div class="shead">Scope & Entry Points</div>
+  <h4>Entry Points</h4>
+  <div class="callout callout-ok"><div><strong>Tab "Practice" riêng</strong> trên bottom navigation — độc lập hoàn toàn với tab Tiến trình/Streak (C1). Không đọc/ghi streak state.</div></div>
+  <ul>
+    <li>Lưu từ: tap 1 từ trong chat/lesson → bottom sheet</li>
+    <li>Lưu câu: nút 🔖 trên message bubble</li>
+    <li>AI correction: tự xuất hiện inline (không có entry thủ công)</li>
+  </ul>
+  <h4>Quan hệ giữa 3 tính năng</h4>
+  <p>Độc lập về data, nhưng <strong>TN2 phụ thuộc điều kiện</strong>: chỉ có data sau khi hoàn thành ≥1 bài học. TN1 và TN3 có data ngay từ session đầu. Không có thứ tự bắt buộc khi xem.</p>
+</div>
+
+<!-- 4 -->
+<div class="section" id="s4">
+  <div class="stitle"><span class="snum">4</span>I/O</div>
+  <div class="shead">Inputs · Outputs · States</div>
+  <h4>API (đồng bộ <code>/me/*</code> — C2)</h4>
+  <div class="tbl-wrap"><table>
+    <tr><th>Endpoint</th><th>Trả về</th><th>Dùng cho</th></tr>
+    <tr><td><code>GET /me/saved-items?type=word|sentence&cursor=&limit=20</code></td><td>List + cursor</td><td>TN1</td></tr>
+    <tr><td><code>POST /me/saved-items</code></td><td>201 mới / 200 đã có</td><td>Lưu</td></tr>
+    <tr><td><code>DELETE /me/saved-items/{id}</code></td><td>204</td><td>Bỏ lưu</td></tr>
+    <tr><td><code>GET /me/curriculum-progress</code></td><td>List learned, group by lesson</td><td>TN2</td></tr>
+    <tr><td><code>GET /me/grammar-errors?cursor=&limit=20</code></td><td>List, sort detected_at desc</td><td>TN3</td></tr>
+    <tr><td><code>GET /me/error-summary</code></td><td><code>{total_errors, errors_by_date, last_error_at}</code></td><td>Home card</td></tr>
+  </table></div>
+  <h4>States</h4>
+  <div class="tbl-wrap"><table>
+    <tr><th>State</th><th>Điều kiện</th><th>Behavior</th></tr>
+    <tr><td>Loading</td><td>Fetch lần đầu</td><td>Skeleton; Home card hiện cache (không che spinner)</td></tr>
+    <tr><td>Empty</td><td>API trả mảng rỗng</td><td>TN1: "Chưa lưu gì..." · TN2: "Hoàn thành bài để mở khóa" · TN3: "Chưa có lỗi nào..."</td></tr>
+    <tr><td>Success</td><td>2xx, mảng &gt; 0</td><td>Render list/counter</td></tr>
+    <tr><td>Failure</td><td>4xx/5xx</td><td>Toast lỗi nhẹ, giữ data cũ, không crash/màn trắng</td></tr>
+    <tr><td>Offline</td><td>Mất network</td><td>Cache gần nhất + banner offline; lưu → xem Failure Modes</td></tr>
+  </table></div>
+</div>
+
+<!-- 5 -->
+<div class="section" id="s5">
+  <div class="stitle"><span class="snum">5</span>FLOW</div>
+  <div class="shead">Flow / Behavior</div>
+
+  <h3>Flow A — Lưu TỪ <span class="tag tag-user">chủ động</span></h3>
+  <ol class="flow-list">
+    <li>Tap 1 từ trong message → bottom sheet trượt lên (≤300ms): từ + IPA + nghĩa VI + ví dụ + 🔊 + 🔖 (outline).</li>
+    <li>Tap 🔖 → <strong>optimistic</strong>: 🔖 fill ngay + toast "Đã lưu vào Từ đã lưu" (2s), KHÔNG đợi BE.</li>
+    <li>Gửi <code>POST /me/saved-items {type:"word", content, translation, source_lesson_id, source_session_id}</code>.</li>
+    <li>BE <strong>dedup theo <code>(user_id, type, content)</code> không phân biệt hoa thường</strong> → tồn tại: 200 + id cũ; mới: 201.</li>
+    <li>BE gọi AI enrich <strong>async</strong>: bổ sung <code>ipa, syllables, example_en, example_vi</code>. Mobile không đợi.</li>
+    <li><strong>Bỏ lưu:</strong> tap lại 🔖 → optimistic về outline → <code>DELETE /me/saved-items/{id}</code>.</li>
+  </ol>
+
+  <h3>Flow B — Lưu CÂU <span class="tag tag-user">chủ động</span></h3>
+  <p>Như Flow A nhưng: <code>type:"sentence"</code>, <strong>không bottom sheet</strong> (lưu trực tiếp từ 🔖 trên message), <strong>không AI enrich</strong>. Dedup theo <code>(user_id, type, content)</code>.</p>
+
+  <h3>Flow C — AI detect lỗi → auto save <span class="tag tag-auto">tự động</span></h3>
+  <ol class="flow-list">
+    <li>User gửi câu (voice/text) → AI đánh giá (rule R4).</li>
+    <li>Có lỗi → AI trả <code>chat_response</code> + <code>correction</code> inline (&lt; 2s). User thấy ngay.</li>
+    <li><strong>Async:</strong> AI layer gọi <code>POST /me/grammar-errors {...}</code>.</li>
+    <li>BE INSERT <code>grammar_errors</code> + UPDATE counter: <code>total_errors += 1</code>, <code>errors_by_date[today] += 1</code>, <code>last_error_at = now()</code>.</li>
+    <li><strong>KHÔNG dedup</strong> — cùng 1 lỗi N lần = N records.</li>
+    <li>POST fail → retry tối đa 3 lần. Hết retry → lỗi vẫn hiện chat nhưng KHÔNG vào TN3 (chấp nhận).</li>
+  </ol>
+
+  <h3>Flow D — Curriculum mark "đã học" <span class="tag tag-auto">tự động</span></h3>
+  <ol class="flow-list">
+    <li>Trigger: <code>POST /lesson/complete</code> (C3).</li>
+    <li>BE query <code>curriculum_items WHERE lesson_id = {completed}</code>.</li>
+    <li>Mỗi item → tạo <code>user_curriculum_progress {user_id, curriculum_item_id, learned_at: now()}</code>.</li>
+    <li><strong>Idempotent:</strong> đã tồn tại <code>(user_id, curriculum_item_id)</code> → skip.</li>
+  </ol>
+  <p>CMS gắn tag per lesson trước. BE chỉ đọc và đánh dấu.</p>
+
+  <h3>Flow E — Home card counter</h3>
+  <ul>
+    <li>TN1: <code>count(type=word)</code> + <code>count(type=sentence)</code></li>
+    <li>TN2: progress % (R2)</li>
+    <li>TN3: <code>GET /me/error-summary</code> → <code>total_errors</code></li>
+  </ul>
+
+  <h3>Flow F — Cascade delete</h3>
+  <div class="callout callout-warn"><div>Khi <code>DELETE /me</code> chạy (<strong>flow do Login-Auth spec sở hữu</strong> — C4), xóa vĩnh viễn 4 bảng: <code>saved_items</code>, <code>user_curriculum_progress</code>, <code>grammar_errors</code>, <code>error_counter</code>. Chỉ <strong>đăng ký vào cascade</strong> — KHÔNG định nghĩa lại Stripe/Apple/payment.</div></div>
+</div>
+
+<!-- DIAGRAMS -->
+<div class="section" id="sdiag">
+  <div class="stitle"><span class="snum">⇄</span>DIAGRAMS</div>
+  <div class="shead">User Flow Diagrams</div>
+  <p class="slead">2 sơ đồ: (1) Data flow — 3 nguồn data đi vào BE rồi ra display; (2) Sequence — ai gọi ai, khi nào, cho 3 luồng write + read.</p>
+
+  <h3>Diagram 1 — Data Flow (3 nguồn → BE → display)</h3>
+  <div class="diagram">
+    <svg width="100%" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+      </defs>
+      <text font-size="10" font-weight="600" fill="#94A3B8" x="115" y="24" text-anchor="middle" letter-spacing="1">NGUỒN</text>
+      <text font-size="10" font-weight="600" fill="#94A3B8" x="430" y="24" text-anchor="middle" letter-spacing="1">BE STORAGE</text>
+      <text font-size="10" font-weight="600" fill="#94A3B8" x="730" y="24" text-anchor="middle" letter-spacing="1">DISPLAY (tab Practice)</text>
+
+      <rect x="15" y="40" width="200" height="64" rx="10" fill="#F5F3FF" stroke="#8957E5" stroke-width="1"/>
+      <text font-size="12" font-weight="700" fill="#5B21B6" x="115" y="64" text-anchor="middle">✏️ User tự lưu</text>
+      <text font-size="10" fill="#64748b" x="115" y="82" text-anchor="middle">Tap từ → 🔖 · 🔖 trên message</text>
+      <text font-size="9" fill="#94A3B8" x="115" y="97" text-anchor="middle">chủ động</text>
+
+      <rect x="15" y="158" width="200" height="64" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="1"/>
+      <text font-size="12" font-weight="700" fill="#92400E" x="115" y="182" text-anchor="middle">📘 CMS gắn tag</text>
+      <text font-size="10" fill="#64748b" x="115" y="200" text-anchor="middle">mark khi lesson.complete</text>
+      <text font-size="9" fill="#94A3B8" x="115" y="215" text-anchor="middle">tự động</text>
+
+      <rect x="15" y="276" width="200" height="64" rx="10" fill="#EBF3FF" stroke="#0060CF" stroke-width="1"/>
+      <text font-size="12" font-weight="700" fill="#1e40af" x="115" y="300" text-anchor="middle">🤖 AI auto-detect</text>
+      <text font-size="10" fill="#64748b" x="115" y="318" text-anchor="middle">grammar errors inline</text>
+      <text font-size="9" fill="#94A3B8" x="115" y="333" text-anchor="middle">tự động</text>
+
+      <path d="M215 72 L305 168" stroke="#94A3B8" stroke-width="1" marker-end="url(#ar)" fill="none"/>
+      <text font-size="9" fill="#94A3B8" x="252" y="115">POST /me/saved-items</text>
+      <path d="M215 190 L305 190" stroke="#94A3B8" stroke-width="1" marker-end="url(#ar)" fill="none"/>
+      <text font-size="9" fill="#94A3B8" x="245" y="184">POST /lesson/complete</text>
+      <path d="M215 308 L305 212" stroke="#94A3B8" stroke-width="1" marker-end="url(#ar)" fill="none"/>
+      <text font-size="9" fill="#94A3B8" x="240" y="270">POST /me/grammar-errors</text>
+
+      <rect x="305" y="146" width="250" height="88" rx="12" fill="#ECFDF5" stroke="#22C55E" stroke-width="1.2"/>
+      <text font-size="13" font-weight="700" fill="#065F46" x="430" y="168" text-anchor="middle">BE Storage</text>
+      <line x1="322" y1="178" x2="538" y2="178" stroke="#A7F3D0"/>
+      <text font-size="10" fill="#374151" x="430" y="196" text-anchor="middle">saved_items · curriculum_progress</text>
+      <text font-size="10" fill="#374151" x="430" y="212" text-anchor="middle">grammar_errors · error_counter</text>
+
+      <path d="M555 168 L640 86" stroke="#94A3B8" stroke-width="1" marker-end="url(#ar)" fill="none"/>
+      <path d="M555 190 L640 190" stroke="#94A3B8" stroke-width="1" marker-end="url(#ar)" fill="none"/>
+      <path d="M555 212 L640 300" stroke="#94A3B8" stroke-width="1" marker-end="url(#ar)" fill="none"/>
+      <text font-size="9" fill="#94A3B8" x="588" y="120">GET</text>
+      <text font-size="9" fill="#94A3B8" x="588" y="184">GET</text>
+      <text font-size="9" fill="#94A3B8" x="588" y="262">GET</text>
+
+      <rect x="640" y="56" width="205" height="58" rx="9" fill="#fff" stroke="#E8EDF3"/>
+      <text font-size="12" font-weight="700" fill="#0F172A" x="742" y="80" text-anchor="middle">📱 TN1 · Từ & câu</text>
+      <text font-size="10" fill="#64748b" x="742" y="98" text-anchor="middle">2 tab · search · detail</text>
+
+      <rect x="640" y="161" width="205" height="58" rx="9" fill="#fff" stroke="#E8EDF3"/>
+      <text font-size="12" font-weight="700" fill="#0F172A" x="742" y="185" text-anchor="middle">📱 TN2 · Khái niệm</text>
+      <text font-size="10" fill="#64748b" x="742" y="203" text-anchor="middle">group theo bài · %</text>
+
+      <rect x="640" y="266" width="205" height="58" rx="9" fill="#fff" stroke="#E8EDF3"/>
+      <text font-size="12" font-weight="700" fill="#0F172A" x="742" y="290" text-anchor="middle">📱 TN3 · Lỗi ngữ pháp</text>
+      <text font-size="10" fill="#64748b" x="742" y="308" text-anchor="middle">group theo ngày</text>
+    </svg>
+  </div>
+
+  <h3>Diagram 2 — Sequence (Mobile · BE · AI Layer)</h3>
+  <div class="diagram">
+    <svg width="100%" viewBox="0 0 780 420" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <rect x="60" y="10" width="80" height="30" rx="6" fill="#F5F3FF" stroke="#8957E5"/>
+      <text font-size="12" font-weight="700" fill="#5B21B6" x="100" y="29" text-anchor="middle">Mobile</text>
+      <rect x="310" y="10" width="80" height="30" rx="6" fill="#ECFDF5" stroke="#22C55E"/>
+      <text font-size="12" font-weight="700" fill="#065F46" x="350" y="29" text-anchor="middle">BE</text>
+      <rect x="560" y="10" width="80" height="30" rx="6" fill="#EBF3FF" stroke="#0060CF"/>
+      <text font-size="12" font-weight="700" fill="#1e40af" x="600" y="29" text-anchor="middle">AI Layer</text>
+      <line x1="100" y1="40" x2="100" y2="410" stroke="#E8EDF3" stroke-dasharray="4 3"/>
+      <line x1="350" y1="40" x2="350" y2="410" stroke="#E8EDF3" stroke-dasharray="4 3"/>
+      <line x1="600" y1="40" x2="600" y2="410" stroke="#E8EDF3" stroke-dasharray="4 3"/>
+
+      <rect x="20" y="54" width="740" height="18" rx="4" fill="#EBF3FF"/>
+      <text font-size="11" font-weight="700" fill="#1e40af" x="390" y="66" text-anchor="middle">Flow A — Lưu từ</text>
+      <line x1="100" y1="90" x2="350" y2="90" stroke="#374151" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#374151" x="225" y="85">POST /me/saved-items {word}</text>
+      <line x1="350" y1="110" x2="100" y2="110" stroke="#22C55E" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#065F46" x="225" y="105">201 (optimistic UI đã hiện)</text>
+      <line x1="350" y1="132" x2="600" y2="132" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#94A3B8" x="475" y="127">async: enrich IPA/example</text>
+      <line x1="600" y1="152" x2="350" y2="152" stroke="#0060CF" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#1e40af" x="475" y="147">{ipa, syllables, examples}</text>
+
+      <rect x="20" y="172" width="740" height="18" rx="4" fill="#EBF3FF"/>
+      <text font-size="11" font-weight="700" fill="#1e40af" x="390" y="184" text-anchor="middle">Flow C — AI detect lỗi → auto save</text>
+      <line x1="100" y1="208" x2="600" y2="208" stroke="#374151" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#374151" x="350" y="203">User message: "Let mess it up"</text>
+      <line x1="600" y1="230" x2="100" y2="230" stroke="#0060CF" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#1e40af" x="350" y="225">response + correction inline (&lt;2s)</text>
+      <line x1="600" y1="252" x2="350" y2="252" stroke="#D97706" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#92400E" x="475" y="247">async POST /me/grammar-errors</text>
+      <text font-size="10" fill="#065F46" x="355" y="274">INSERT + counter +1 (retry 3 lần)</text>
+
+      <rect x="20" y="292" width="740" height="18" rx="4" fill="#ECFDF5"/>
+      <text font-size="11" font-weight="700" fill="#065F46" x="390" y="304" text-anchor="middle">Mobile đọc data — khi mở tab Practice</text>
+      <line x1="100" y1="328" x2="350" y2="328" stroke="#374151" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#374151" x="225" y="323">GET /me/saved-items</text>
+      <line x1="100" y1="350" x2="350" y2="350" stroke="#374151" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#374151" x="225" y="345">GET /me/curriculum-progress</text>
+      <line x1="100" y1="372" x2="350" y2="372" stroke="#374151" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#374151" x="225" y="367">GET /me/grammar-errors</text>
+      <line x1="100" y1="394" x2="350" y2="394" stroke="#374151" stroke-width="1" marker-end="url(#ar)"/>
+      <text font-size="10" fill="#374151" x="225" y="389">GET /me/error-summary</text>
+    </svg>
+  </div>
+</div>
+
+<!-- 6 -->
+<div class="section" id="s6">
+  <div class="stitle"><span class="snum">6</span>LOGIC</div>
+  <div class="shead">Business Rules & Logic</div>
+  <p class="slead">Các rule có thể derive trực tiếp thành dev task và test case.</p>
+
+  <div class="rule-card"><div class="rid">R1 — Dedup saved_items</div><p>Khóa dedup = <code>(user_id, type, LOWER(TRIM(content)))</code>. "Hello" và "hello " → cùng 1 item. Không tạo bản sao; trả id đã có.</p></div>
+  <div class="rule-card"><div class="rid">R2 — Công thức progress % của TN2</div><p>Per lesson: <code>progress% = round(số learned / tổng khái niệm CMS × 100)</code>. Flow D mark <em>tất cả</em> item khi complete → hoàn thành bài = 100%. Lesson chưa xong không xuất hiện (Q4).</p></div>
+  <div class="rule-card"><div class="rid">R3 — Pagination</div><p>Cursor-based, <code>limit=20</code>/trang. TN1 group theo <code>created_at</code>. TN3 group theo <code>detected_at</code>, mới nhất trên đầu.</p></div>
+
+  <h3>R4 — AI Grammar Detection</h3>
+  <div class="callout callout-warn"><div><strong>Scope:</strong> chỉ phát hiện <strong>lỗi ngữ pháp thực sự</strong> (câu SAI). KHÔNG gợi ý cách diễn đạt tự nhiên hơn. Câu đúng ngữ pháp dù không tự nhiên → PASS.</div></div>
+
+  <h4>Input / Output Contract</h4>
+  <pre><code><span class="cmt">// Input</span>
+{ "user_id","session_id","lesson_id?","user_message",
+  "conversation_context":[3-5], "user_level", "source":"voice"|"text" }
+
+<span class="cmt">// Output — có lỗi</span>
+{
+  "has_error": true,
+  "correction": {
+    "wrong_sentence": "Let mess it up",
+    "correct_sentence": "Let's mess it up.",
+    "explanation_vi": "Ở đây cần dùng \"let's\" (viết tắt của \"let us\")...",
+    "rule_tag": "let_vs_lets",
+    "error_words": ["Let"], "corrected_words": ["Let's"]
+  },
+  "chat_response": "I get it, but...", "save_to_be": true
+}
+<span class="cmt">// Output — không lỗi → { "has_error": false, "correction": null, "save_to_be": false }</span></code></pre>
+
+  <h4>Quy tắc ĐÁNH LỖI vs PASS</h4>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:14%">Hành động</th><th>Tình huống</th><th>Ví dụ</th></tr>
+    <tr><td><span class="tag tag-err">ĐÁNH LỖI</span></td><td>Sai thì/cấu trúc/thiếu-thừa từ</td><td>"I goed" → "I <strong>went</strong>"</td></tr>
+    <tr><td><span class="tag tag-err">ĐÁNH LỖI</span></td><td>Sai từ trong context</td><td>"call other car" → "call <strong>another</strong> car"</td></tr>
+    <tr><td><span class="tag tag-err">ĐÁNH LỖI</span></td><td>Thiếu article/preposition rõ</td><td>"I go school" → "I go <strong>to</strong> school"</td></tr>
+    <tr><td><span class="tag tag-pass">PASS</span></td><td>Đúng ngữ pháp, informal/ngắn gọn</td><td>"That good"</td></tr>
+    <tr><td><span class="tag tag-pass">PASS</span></td><td>Slang phổ biến</td><td>"Gonna","Wanna","Gotta"</td></tr>
+    <tr><td><span class="tag tag-pass">PASS</span></td><td>Câu chưa hoàn chỉnh / đang gõ dở</td><td>"I think..."</td></tr>
+    <tr><td><span class="tag tag-pass">PASS</span></td><td>Tin nhắn quá ngắn (1-2 từ)</td><td>"Yes", "OK"</td></tr>
+    <tr><td><span class="tag tag-pass">PASS</span></td><td>Câu hỏi/giao tiếp, không phải bài tập</td><td>"What do you mean?"</td></tr>
+  </table></div>
+
+  <h4>Mức độ sửa theo level</h4>
+  <p>A1/A2 → chỉ sửa lỗi cơ bản (thì, cấu trúc, article). B1+ → sửa chặt hơn (word choice, preposition, collocation). Không overwhelm beginner. Câu nhiều lỗi (3+) → chỉ sửa 1-2 lỗi nghiêm trọng nhất.</p>
+
+  <h4>Style giải thích VI</h4>
+  <p>100% tiếng Việt (từ EN giữ trong ngoặc kép) · 1-2 câu (tối đa 3) · tone thân thiện như bạn bè · pattern <code>[Ở đây cần...] + [vì...] + [ví dụ đúng]</code>. <code>rule_tag</code>: AI tự sinh <code>snake_case</code>, không phải hard enum, BE lưu nguyên string.</p>
+
+  <h4>Edge cases</h4>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:40%">Tình huống</th><th>AI xử lý</th></tr>
+    <tr><td>Mix Việt + Anh</td><td>Chỉ đánh giá phần tiếng Anh</td></tr>
+    <tr><td>Cùng lỗi lặp trong session</td><td>Vẫn sửa + gửi BE; giải thích ngắn hơn lần sau</td></tr>
+    <tr><td>source=voice, câu vô nghĩa (STT sai)</td><td>PASS + hỏi nói lại; KHÔNG đánh lỗi STT</td></tr>
+    <tr><td>Đang ở lesson chủ đề cụ thể</td><td>Ưu tiên lỗi liên quan grammar point của lesson</td></tr>
+  </table></div>
+
+  <h4>Latency</h4>
+  <p>Detection + correction <strong>&lt; 2s</strong> (trong chat response) · POST cho BE async, retry 3 lần · IPA enrich &lt; 10s background.</p>
+</div>
+
+<!-- 7 -->
+<div class="section" id="s7">
+  <div class="stitle"><span class="snum">7</span>INV</div>
+  <div class="shead">Critical Invariants</div>
+  <ul>
+    <li>Dedup TN1: <code>(user_id, type, LOWER(TRIM(content)))</code> không bao giờ trùng.</li>
+    <li>TN3 KHÔNG dedup: counter = đúng số lần mắc thực tế.</li>
+    <li>Flow D idempotent: <code>(user_id, curriculum_item_id)</code> duy nhất.</li>
+    <li>AI→BE async KHÔNG chặn chat: correction hiện trước; fail → retry ≥3.</li>
+    <li><code>total_errors</code> chỉ tăng, không reset.</li>
+    <li>Cascade delete 4 bảng cùng <code>DELETE /me</code>.</li>
+    <li>Detail sheet KHÔNG có mic. AI KHÔNG gợi ý cách diễn đạt.</li>
+    <li>Practice Hub KHÔNG đọc/ghi streak state (tab độc lập).</li>
+  </ul>
+</div>
+
+<!-- 8 -->
+<div class="section" id="s8">
+  <div class="stitle"><span class="snum">8</span>EVT</div>
+  <div class="shead">Event Tracking</div>
+  <div class="tbl-wrap"><table>
+    <tr><th>Event</th><th>Trigger</th><th>Params</th></tr>
+    <tr><td><code>practice_hub_viewed</code></td><td>Mở tab Practice</td><td>—</td></tr>
+    <tr><td><code>save_word</code></td><td>Tap 🔖 lưu từ</td><td>word, source:"lesson"|"chat", lesson_id</td></tr>
+    <tr><td><code>unsave_word</code></td><td>Tap 🔖 bỏ từ</td><td>word</td></tr>
+    <tr><td><code>save_sentence</code></td><td>Tap 🔖 lưu câu</td><td>session_id</td></tr>
+    <tr><td><code>unsave_sentence</code></td><td>Tap 🔖 bỏ câu</td><td>—</td></tr>
+    <tr><td><code>practice_tab_viewed</code></td><td>Mở 1 trong 3 tab</td><td>tab:"saved"|"curriculum"|"grammar"</td></tr>
+    <tr><td><code>saved_tab_switched</code></td><td>Chuyển Câu/Từ trong TN1</td><td>tab:"sentence"|"word"</td></tr>
+    <tr><td><code>item_detail_opened</code></td><td>Tap item mở detail</td><td>type, item_id</td></tr>
+    <tr><td><code>audio_played</code></td><td>Tap 🔊</td><td>type, item_id, speed:"0.7x"</td></tr>
+    <tr><td><code>grammar_error_viewed</code></td><td>Mở tab TN3</td><td>error_count</td></tr>
+  </table></div>
+  <p style="font-size:13px;font-style:italic">Analytics SDK lỗi/offline → app vẫn chạy, không block flow. AI detect không có client event riêng (xử lý ở AI layer).</p>
+</div>
+
+<!-- 9 -->
+<div class="section" id="s9">
+  <div class="stitle"><span class="snum">9</span>Q</div>
+  <div class="shead">Open Questions — cần PO chốt</div>
+  <div class="q-card"><b>Q1 (UI):</b> Figma link chính thức cho 8 màn? (hiện chỉ wireframe tham khảo)</div>
+  <div class="q-card"><b>Q2 (Gating):</b> Practice Hub giới hạn Free vs PRO không? (Login-Auth có entitlement PRO/FREE)</div>
+  <div class="q-card"><b>Q3 (Platform):</b> Có lên Web App không? Streak/Auth cross-platform, bản cũ ghi "iOS only".</div>
+  <div class="q-card"><b>Q4 (Progress %):</b> TN2 có cần track partial progress (lesson học dở)? Hiện R2 = 100% khi complete.</div>
+</div>
+
+<!-- 10 -->
+<div class="section" id="s10">
+  <div class="stitle"><span class="snum">10</span>REF</div>
+  <div class="shead">References</div>
+  <ul>
+    <li><code>srs-streak-progress.md</code> — sở hữu tab Tiến trình/Streak, <code>/lesson/complete</code>, convention <code>/me/*</code></li>
+    <li><code>srs-login-auth.md</code> — sở hữu <code>DELETE /me</code> + cascade + entitlement PRO/FREE</li>
+  </ul>
+</div>
+
+<!-- AC -->
+<div class="section" id="sac">
+  <div class="stitle"><span class="snum">AC</span>CONDITIONAL</div>
+  <div class="shead">Acceptance Criteria</div>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:9%">ID</th><th>Given</th><th>When</th><th>Then</th></tr>
+    <tr><td>AC-01</td><td>User mở tab Practice</td><td>màn render</td><td>3 card: TN1 (từ+câu) · TN2 (%) · TN3 (total_errors)</td></tr>
+    <tr><td>AC-02</td><td>User mới chưa có data</td><td>màn render</td><td>card count=0, không crash/màn trắng</td></tr>
+    <tr><td>AC-03</td><td>Bottom sheet hiện, 🔖 outline</td><td>tap 🔖</td><td>🔖 fill + toast 2s ngay (optimistic), POST chạy nền</td></tr>
+    <tr><td>AC-04</td><td>Lưu "Hello", gặp "hello " lần nữa</td><td>tap 🔖 lần 2</td><td>KHÔNG tạo trùng (R1), trả id cũ</td></tr>
+    <tr><td>AC-05</td><td>Từ đã lưu (🔖 fill)</td><td>tap lại 🔖</td><td>DELETE → outline → item biến khỏi tab</td></tr>
+    <tr><td>AC-06</td><td>Tap 🔖 khi mất mạng</td><td>POST fail</td><td>toast lỗi, 🔖 về outline, không crash</td></tr>
+    <tr><td>AC-07</td><td>AI trả has_error=true</td><td>render response</td><td>correction block teal: câu đúng + giải thích VI</td></tr>
+    <tr><td>AC-08</td><td>AI trả has_error=false</td><td>render</td><td>chỉ chat response, KHÔNG correction block</td></tr>
+    <tr><td>AC-09</td><td>Mắc cùng 1 lỗi 3 lần/session</td><td>mở TN3</td><td>3 records (không dedup), counter=3</td></tr>
+    <tr><td>AC-10</td><td>Chưa hoàn thành bài nào</td><td>mở TN2</td><td>empty "Hoàn thành bài học để mở khóa"</td></tr>
+    <tr><td>AC-11</td><td>Hoàn thành bài có 5 khái niệm</td><td>mở TN2</td><td>5 khái niệm hiện dưới lesson, progress=100%</td></tr>
+    <tr><td>AC-12</td><td>Tap item trong list</td><td>detail mở</td><td>từ+nghĩa+IPA+🔊 0.7x, KHÔNG mic</td></tr>
+    <tr><td>AC-13</td><td>AI→BE POST fail 3 lần</td><td>mở TN3</td><td>lỗi KHÔNG có trong list (đã hiện ở chat)</td></tr>
+  </table></div>
+</div>
+
+<!-- FM/DATA/NFR/OOS -->
+<div class="section" id="sfm">
+  <div class="stitle"><span class="snum">+</span>CONDITIONAL</div>
+  <div class="shead">Failure Modes · Data Model · NFR · Out of Scope</div>
+
+  <h3>Failure Modes & Fallback UX</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>Case</th><th>User impact</th><th>Expected behavior</th></tr>
+    <tr><td><code>POST /me/saved-items</code> fail</td><td>Không lưu được</td><td>Toast lỗi, rollback 🔖 về outline, không crash</td></tr>
+    <tr><td>AI→BE POST fail (sau 3 retry)</td><td>Lỗi không vào TN3</td><td>Correction vẫn hiện chat; chấp nhận mất record</td></tr>
+    <tr><td>GET list fail / offline</td><td>Không load mới</td><td>Cache gần nhất + banner offline; không màn trắng</td></tr>
+    <tr><td>AI enrich fail</td><td>Thiếu IPA/ví dụ</td><td>Hiện content + translation ngay; field enrich để trống</td></tr>
+  </table></div>
+
+  <h3>Data Model</h3>
+  <div class="callout callout-info"><div>Schema mô tả data + quan hệ logic. Index/jsonb/partitioning do BE quyết.</div></div>
+  <div class="tbl-wrap"><table>
+    <tr><th>Bảng</th><th>Fields chính</th></tr>
+    <tr><td><code>saved_items</code></td><td>id · user_id · type(word|sentence) · content · translation · ipa? · syllables? · example_en? · example_vi? · source_lesson_id? · source_session_id? · created_at</td></tr>
+    <tr><td><code>curriculum_items</code> (CMS)</td><td>id · lesson_id · content · translation · ipa? · level · tags[]</td></tr>
+    <tr><td><code>user_curriculum_progress</code></td><td>user_id · curriculum_item_id · learned_at</td></tr>
+    <tr><td><code>grammar_errors</code></td><td>id · user_id · wrong_sentence · correct_sentence · explanation_vi · rule_tag? · session_id · lesson_id? · detected_at</td></tr>
+    <tr><td><code>error_counter</code></td><td>user_id · total_errors(int) · errors_by_date(jsonb) · last_error_at</td></tr>
+  </table></div>
+
+  <h3>Non-Functional Requirements</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th style="width:12%">ID</th><th>Statement</th><th style="width:28%">Metric</th></tr>
+    <tr><td>NFR-01</td><td>Bottom sheet trượt lên mượt</td><td>≤ 300ms</td></tr>
+    <tr><td>NFR-02</td><td>Toast confirm hiện ngay, không đợi BE</td><td>Optimistic UI</td></tr>
+    <tr><td>NFR-03</td><td>List load item đầu nhanh</td><td>≤ 500ms P95</td></tr>
+    <tr><td>NFR-04</td><td>Mất mạng → cache, không màn trắng</td><td>Offline test</td></tr>
+  </table></div>
+
+  <h3>Out of Scope</h3>
+  <ul>
+    <li>Luyện phát âm (mic + chấm điểm) — phase sau</li>
+    <li>Gợi ý cách diễn đạt tự nhiên hơn — PO quyết không build</li>
+    <li>Tab "Sắp tới" (vocab chưa học)</li>
+    <li>SRS scheduling tự động — Phase 1 chỉ hiển thị list</li>
+    <li>Writing epic — phase sau</li>
+    <li>Định nghĩa lại logic xóa account/Stripe/Apple/payment — thuộc Login-Auth (C4)</li>
+    <li>Streak logic — thuộc Streak & Progress spec (C1)</li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>
