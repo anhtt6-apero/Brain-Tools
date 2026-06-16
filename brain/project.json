@@ -1,0 +1,6 @@
+{
+  "current_version": "v1.4.0",
+  "versions": ["v1.3.0", "v1.4.0"],
+  "roles": ["po_docs", "tester", "dev_mobile", "be_docs", "ai_docs"],
+  "updated": "2026-06-15"
+}

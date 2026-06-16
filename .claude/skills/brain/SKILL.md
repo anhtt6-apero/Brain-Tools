@@ -1,128 +1,169 @@
 ---
 name: brain
-description: Operating manual cho bộ não tư duy Apero. Nạp ĐẦU MỖI PHIÊN khi làm việc trong repo này — xác định user, đọc focus hiện tại, quét trí nhớ, và áp quy ước đọc/ghi vùng chung vs riêng.
+description: Bộ luật & phân quyền của bộ não tư duy Apero. Nạp ĐẦU MỖI PHIÊN — nhận diện "bạn là ai", đọc version dự án đang chạy, phổ biến vai trò làm được gì (ghi đâu / xem gì / dùng skill nào), và áp quy ước vùng chung vs riêng.
 ---
 
-# Skill: brain — vận hành bộ não tư duy
+# Skill: brain — bộ luật & phân quyền của bộ não tư duy
 
-Bộ não là kho markdown local-first, git-tracked, dùng chung cho team. Đây là sách hướng dẫn.
+Bộ não là kho markdown local-first, git-tracked, dùng chung cho team. **Dự án triển khai theo VERSION**:
+mỗi version của app = 1 folder trong `docs/`, bên trong chia theo **5 vai trò**, mỗi vai trò một folder
+là nơi vai trò đó bỏ tài liệu/file của mình.
 
-## Bước khởi động (chạy đầu mỗi phiên) — cũng là ONBOARDING lần đầu
+`brain/` định nghĩa phần "luật": **nhận diện người dùng → version đang chạy → phân quyền theo vai trò →
+trí nhớ chung**. Đây là sách hướng dẫn brain đọc đầu mỗi phiên.
 
-1. **Tôi là ai?** — `git config user.email` → lấy phần trước `@` làm `<user>` (vd `ban@apero.vn` → `ban`).
-   - ⚠️ **Guard:** nếu email rỗng HOẶC domain ≠ `apero.vn` → DỪNG và nhắc user chạy
-     `git config user.email "ban@apero.vn"` trước. KHÔNG tự tạo hồ sơ "user lạ".
-   - Đã có `brain/people/<user>.md` → đọc (lấy `role`).
-   - **Lần đầu (chưa có hồ sơ):** HỎI tên + **vai trò** (`PO | Tester | Dev | BE | AI`) → tạo
-     `people/<user>.md` từ template mục "Template". Đây chính là bước **onboard** người mới.
-2. **Focus hiện tại** — đọc `brain/state/<user>.json` (đang làm tính năng gì, tiến độ).
-3. **Trí nhớ** — đọc `brain/knowledge/INDEX.md` (sản phẩm, đối thủ, quyết định, **tính năng**).
-4. **Tóm tắt + phổ biến quyền** — nói cho user: "Bạn là `<tên>` (`<role>`). Đang làm `<X>`, tiến độ `<Y%>`."
-   rồi liệt kê **bạn làm được gì trong dự án này** theo đúng dòng vai trò ở bảng *Vai trò & quyền* bên dưới
-   (+ gợi ý skill nên dùng). Xong mới hỏi/làm.
-5. **Câu hỏi đang chờ** — 1 lệnh (quote path vì repo có dấu cách):
-   `grep -rl 'status: open' "brain/knowledge/features/"*/questions/ 2>/dev/null`.
-   - Nếu là **PO**: lọc feature có `po: <me>` → có câu chờ thì NHẮC ngay: "⚠️ Bạn có `<N>` câu hỏi đang
-     chờ trả lời ở [[<slug>]] (`<id>`, …)" + gợi ý chạy `ask-po` luồng B.
-   - Vai trò khác: nhắc 1 dòng — "Thắc mắc về tính năng → chạy `ask-po` (tự dedup), đừng hỏi trùng."
+```
+docs/<version>/<role>/   ← tài liệu dự án (po_docs · tester · dev_mobile · be_docs · ai_docs)
+brain/                   ← luật + phân quyền + version + trí nhớ chung + state/people/logs
+```
 
-## Bản đồ thư mục
+## A. Khởi động mỗi phiên ("start") — nhận diện & phổ biến quyền
+
+> Đây chính là trải nghiệm *"clone về → mở phiên → brain hỏi bạn là ai → nói bạn làm được gì"*.
+> `CLAUDE.md` ép chạy bước này TRƯỚC khi làm gì khác. Lần đầu chưa có hồ sơ = **onboard**.
+
+1. **Bạn là ai?** — `git config user.email` → lấy phần trước `@` làm `<user>` (vd `ban@apero.vn` → `ban`).
+   - ⚠️ **Guard:** email rỗng HOẶC domain ≠ `apero.vn` → DỪNG, nhắc `git config user.email "ban@apero.vn"`.
+     KHÔNG tự tạo hồ sơ "user lạ".
+   - Có `brain/people/<user>.md` → đọc (lấy `role`).
+   - **Lần đầu (chưa có hồ sơ) → HỎI** tên + **vai trò** (`PO | Tester | Dev | BE | AI`) → tạo
+     `people/<user>.md` từ template §J. Đây là bước **onboard**.
+2. **Dự án đang version nào?** — đọc `brain/project.json` → `current_version` (vd `v1.4.0`). Đây là
+   nguồn sự thật dùng chung: mọi tài liệu mới rơi vào version này.
+3. **Focus của bạn** — đọc `brain/state/<user>.json` (đang làm gì, tiến độ).
+4. **Trí nhớ chung** — đọc `brain/knowledge/INDEX.md` (sản phẩm, đối thủ, quyết định — xuyên version).
+5. **Phổ biến quyền** — nói cho user đúng 1 đoạn, theo dòng vai trò của họ ở bảng §C:
+   > Bạn là `<tên>` (`<role>`). Dự án đang ở `<current_version>`.
+   > • **Ghi vào:** `docs/<current_version>/<role-folder>/`
+   > • **Xem được:** `<scope>`
+   > • **Dùng được:** `<skill + lệnh tiêu biểu>`
+
+   Xong mới hỏi/làm.
+6. **Câu hỏi đang chờ (QA)** — quét `brain/qa/` có `status: open`:
+   `grep -rl 'status: open' brain/qa/ 2>/dev/null`.
+   - **PO:** có câu chờ → NHẮC ngay ("⚠️ Có `<N>` câu hỏi đang chờ PO trả lời") + gợi ý `ask-po`.
+   - Vai trò khác: "Thắc mắc → `ask-po` (tự dedup), đừng hỏi trùng."
+
+## B. Version đang hoạt động — `brain/project.json`
+
+`brain/project.json` là **nguồn sự thật dùng chung** cho "dự án đang ở version nào":
+
+```json
+{
+  "current_version": "v1.4.0",
+  "versions": ["v1.3.0", "v1.4.0"],
+  "roles": ["po_docs", "tester", "dev_mobile", "be_docs", "ai_docs"],
+  "updated": "YYYY-MM-DD"
+}
+```
+
+- **Định tuyến tự động:** bất kỳ ai "tạo docs / bỏ file" → ghi vào `docs/<current_version>/<role-folder>/`.
+  Không ai phải nhớ version.
+- **Muốn đụng version khác** (vd fix `v1.3.0`) → nói rõ version → ghi vào đúng folder đó.
+- **Lên version mới** (PO làm): tạo `docs/<vX>/` + 5 folder vai trò, thêm vào `versions`, đổi
+  `current_version`, cập nhật `updated` (lấy giờ thật bằng `date`).
+- ⚠️ Phân biệt: `project.json` = **chung** (version dự án) · `state/<user>.json` = **riêng** (focus của bạn).
+
+## C. Vai trò, quyền & định tuyến (capability map)
+
+> **Không phân quyền cứng** (markdown + git, không enforce kỹ thuật) — đây là **quy ước mềm + briefing
+> đầu phiên + attribution**, tin tưởng team (theo spec gốc: không RBAC). "Quyền" = *được kỳ vọng làm gì*.
+
+`<ver>` = `current_version` trong `project.json`.
+
+| Vai trò | Ghi vào | Xem được (scope) | Skill | Việc / lệnh tiêu biểu |
+|---|---|---|---|---|
+| **PO** | `docs/<ver>/po_docs/` | **TOÀN dự án** — mọi version, mọi folder vai trò + `brain/knowledge/` | `po-feature`, `research-competitor`, `ask-po` | Viết tài liệu tính năng; xem task Dev / logic BE-AI trong version; **quản `current_version`** (lên version mới) |
+| **Tester** | `docs/<ver>/tester/` | `docs/<ver>/po_docs/` (mô tả dự án) | _(skill test — thêm sau)_, `ask-po` | Đọc mô tả → gen file test case |
+| **Dev (mobile)** | `docs/<ver>/dev_mobile/` | `po_docs/` + `be_docs/` + `ai_docs/` (cùng version) | `dev-task`, `ask-po` | Đọc docs → gen task / triển khai |
+| **BE** | `docs/<ver>/be_docs/` | `docs/<ver>/po_docs/` | `push-logic`, `ask-po` | Push logic backend để các bên tham khảo |
+| **AI** | `docs/<ver>/ai_docs/` | `docs/<ver>/po_docs/` | `push-logic`, `ask-po` | Push logic AI để các bên tham khảo |
+
+- **PO là vai trò duy nhất nhìn toàn cảnh** + đổi version dự án.
+- Vai trò khác **ghi trong folder của mình**, **đọc `po_docs`** làm nguồn; Dev đọc thêm logic BE/AI.
+- Bí sau khi đọc docs → skill `ask-po` (escalate cho PO).
+
+## ❓ Hỏi-đáp (QA), nghiên cứu & trí nhớ dự án
+
+**QA — bí khi đọc docs (skill `ask-po`).** Store dùng chung `brain/qa/` (1 câu = 1 file, lưu vĩnh viễn
+để khỏi hỏi lại). Trước khi tạo câu mới, BẮT BUỘC check theo thứ tự:
+1. **Docs version HIỆN TẠI** (`docs/<current_version>/`, ưu tiên `po_docs/`) — ưu tiên số 1.
+2. **`brain/qa/`** — đã có ai hỏi chưa (answered → trả lời lại).
+3. **Docs version CŨ** (`docs/<version cũ>/`).
+4. Hết vẫn không có → tạo `brain/qa/<slug>-<asker>.md` (status: open) + ghi `ASK-LOG`.
+PO trả lời → ghi đáp vào file QA; chốt chính thức về tính năng → cập nhật `docs/<ver>/po_docs/`.
+
+**Nghiên cứu đối thủ/thị trường (skill `research-competitor`).** Raw + report → `brain/research/`.
+**Lý do CHỐT làm / KHÔNG làm tính năng** → `brain/knowledge/decisions/` (để sau biết vì sao). Insight đối
+thủ → `brain/knowledge/competitors/`. Tính năng chốt làm → PO viết vào `docs/<current_version>/po_docs/`.
+
+**Trí nhớ dự án xuyên version.** `brain/knowledge/products/` tích lũy hiểu biết về sản phẩm qua nhiều
+version — viết để AI/người sau đọc standalone là hiểu, không phải đọc lại toàn bộ docs.
+
+## D. Bản đồ thư mục (vùng chung vs riêng)
 
 | Đường dẫn | Là gì | Vùng |
 |---|---|---|
-| `brain/people/<user>.md` | hồ sơ thành viên | chung (mỗi người 1 file) |
+| `brain/project.json` | version dự án đang chạy + danh sách version/role | **chung** (1 nguồn sự thật) |
+| `brain/people/<user>.md` | hồ sơ thành viên (tên, vai trò) | chung (mỗi người 1 file) |
 | `brain/state/<user>.json` | focus & tiến độ | **RIÊNG** — không sửa của người khác |
-| `brain/knowledge/products/<slug>.md` | bối cảnh sản phẩm | chung |
-| `brain/knowledge/competitors/<slug>.md` | hồ sơ đối thủ + insight quảng cáo | chung |
-| `brain/knowledge/decisions/<date>-<slug>.md` | nhật ký quyết định | chung (append-only) |
-| `brain/research/<date>-<feature>-<user>/` | output nghiên cứu | append-only |
-| `brain/knowledge/features/<slug>/feature.md` | tài liệu tính năng (PO) — **nguồn sự thật** | chung |
-| `brain/knowledge/features/<slug>/{ui,tests,tasks,logic}/` | output theo vai trò (PO/Tester/Dev/BE-AI) | chung; `tasks/`,`logic/` mỗi người 1 file |
-| `brain/knowledge/features/<slug>/questions/<id>.md` | 1 câu hỏi escalate = 1 file (`<slug-câu>-<asker>`) | chung; tên duy nhất → không đụng |
-| `brain/ASK-LOG.md` | nhật ký hỏi-đáp (ai hỏi · feature · lúc nào · ai chốt) | chung, append-only |
+| `brain/knowledge/products\|competitors\|decisions/` | trí nhớ **xuyên version** (sản phẩm, đối thủ, quyết định) | chung |
+| `brain/knowledge/INDEX.md` | mục lục trí nhớ chung | chung |
+| `brain/research/<date>-<chủ-đề>-<user>/` | output nghiên cứu | append-only |
+| `brain/qa/<slug>-<asker>.md` | 1 câu hỏi escalate cho PO = 1 file (QA store — chống hỏi lại) | chung; tên duy nhất |
+| `docs/<version>/<role>/` | tài liệu dự án theo version & vai trò | chung (mỗi vai trò 1 folder) |
+| `brain/ASK-LOG.md` | nhật ký hỏi-đáp | chung, append-only |
 | `brain/PUSH-LOG.md` | nhật ký push (ai · lúc nào · gì) | chung, append-only |
 | `brain/dashboard/` | HTML sinh ra | gitignore, local |
 
-## Vai trò & quyền (capability map) — phổ biến lúc onboard
+## E. Quy ước ghi tài liệu
 
-Không phân quyền cứng (tin team), nhưng mỗi vai trò có **việc & skill mặc định**. Đầu phiên, sau khi
-nhận diện user → đọc `role` trong `people/<user>.md` → **phổ biến đúng dòng của họ**:
+- **`brain/knowledge/`** (trí nhớ chung): mỗi file mở đầu bằng frontmatter
+  `name` / `type` (product|competitor|decision) / `author` / `updated_by` / `date` / `tags`.
+  Liên kết bằng `[[slug]]`. Tạo/sửa xong → cập nhật 1 dòng trong `brain/knowledge/INDEX.md`.
+  Sửa file người khác → đổi `updated_by`, giữ `author` gốc.
+- **`docs/<ver>/<role>/`**: nên có frontmatter nhẹ `version` / `role` / `author` / `updated_by` / `date`
+  để truy vết. Quy ước chi tiết per-role do skill của từng vai trò định (đang cập nhật cho cấu trúc mới).
 
-| Vai trò | Làm gì trong dự án | Skill | Đọc chính | Ghi vào |
-|---|---|---|---|---|
-| **PO** | Viết feature doc + UI preview; soi đối thủ; **giải đáp câu hỏi chờ** | `po-feature`, `research-competitor`, `ask-po` | `products/`, `research/`, `questions/` | `feature.md`, `ui/`, `questions/` (chốt) |
-| **Tester** | Đọc feature doc → sinh test case; **hỏi PO khi bí** | `ask-po` _(+ skill test tự thêm sau)_ | `feature.md`, `questions/` | `tests/`, `questions/` |
-| **Dev** | Đọc feature doc → gen task; **hỏi PO khi bí** | `dev-task`, `ask-po` | `feature.md`, `logic/`, `questions/` | `tasks/<user>.md`, `questions/` |
-| **BE / AI** | Push logic đang xử lý làm tài liệu; **hỏi PO khi bí** | `push-logic`, `ask-po` | code của mình | `logic/<user>.md`, `questions/` |
-| **Mọi vai trò** | Xem tiến độ; tự học | `brain-dashboard`, `brain` | toàn bộ | `state/<user>.json`, memory |
+## F. Cập nhật state
 
-## Quy ước ghi file knowledge
+`brain/state/<user>.json` = focus RIÊNG của bạn. Sau mỗi cột mốc → cập nhật tiến độ, rồi gợi ý
+regenerate dashboard (`brain-dashboard`). KHÔNG để version dự án ở đây — version nằm ở `project.json`.
 
-Mọi file trong `knowledge/` mở đầu bằng frontmatter:
-
-```markdown
----
-name: <slug>
-type: product | competitor | decision
-author: <user tạo>
-updated_by: <user sửa gần nhất>
-date: YYYY-MM-DD
-tags: [..]
----
-```
-
-- Liên kết các file bằng `[[slug]]`.
-- Sau khi tạo/sửa file knowledge → cập nhật 1 dòng trong `brain/knowledge/INDEX.md`.
-- Sửa file của người khác trong kho chung: đổi `updated_by` thành mình, giữ `author` gốc.
-
-## Cập nhật state
-
-`brain/state/<user>.json` (xem schema trong file mẫu). Sau mỗi cột mốc → cập nhật tiến độ,
-rồi gợi ý user regenerate dashboard (`brain-dashboard`).
-
-## Commit / Push — xác nhận người push & ghi log
+## G. Commit / Push — xác nhận người push & ghi log
 
 **Claude KHÔNG tự commit.** Khi user yêu cầu commit/push, làm đúng thứ tự:
 
 1. **Xác nhận danh tính:** `git config user.email` phải là `<user>@apero.vn` và khớp người đang làm.
-   Lệch (vd email cá nhân) → **DỪNG**, báo user sửa `git config user.email`. Không push "nhân danh người khác".
+   Lệch (vd email cá nhân) → **DỪNG**, báo user sửa. Không push "nhân danh người khác".
 2. **Lấy thời điểm thật:** chạy `date "+%Y-%m-%d %H:%M"`.
 3. **Ghi PUSH-LOG:** append 1 dòng vào `brain/PUSH-LOG.md`:
    `- <YYYY-MM-DD HH:MM> — <user> (<role>) — <tóm tắt thay đổi>`
-4. **Xác nhận với user 1 câu:** "Commit nhân danh `<user>` (`<role>`) lúc `<time>`: `<tóm tắt>` — ok?" rồi mới commit.
-5. Commit message tiếng Việt, ngắn gọn; nêu tên người nếu nhiều người cùng vùng.
+4. **Xác nhận với user 1 câu** rồi mới commit. Commit message tiếng Việt, ngắn gọn.
 
-→ Mục đích: biết **ai push · lúc nào · cái gì** ngay cả khi không đọc `git log`.
+## H. Quy tắc vàng
 
-## Quy tắc vàng
+- Đọc `brain/knowledge/` + `docs/<ver>/po_docs/` TRƯỚC khi hỏi — đừng hỏi điều đã biết.
+- Đầu phiên: nhận diện user → đọc `project.json` → **phổ biến quyền theo vai trò** (§C). Lần đầu thì hỏi vai trò.
+- Mọi tài liệu mới → định tuyến vào `docs/<current_version>/<role-folder>/` (§B). Version khác phải nói rõ.
+- Khi user nói "thêm tính năng X" → `research-competitor`. PO "viết tài liệu tính năng" → `po-feature`.
+  Dev "gen task" → `dev-task`. BE/AI "push logic" → `push-logic`. "Xem tiến độ" → `brain-dashboard`.
+- Bí sau khi đọc docs → `ask-po`: check docs hiện tại → `brain/qa/` → docs cũ → chưa có mới tạo QA.
+- **Không tự commit git.** Commit/push → theo §G (xác nhận danh tính + ghi `PUSH-LOG.md`).
 
-- Đọc `knowledge/` TRƯỚC khi hỏi user — đừng hỏi điều đã biết.
-- Đầu phiên: nhận diện user → **phổ biến quyền theo vai trò** (bảng *Vai trò & quyền*). Lần đầu thì hỏi vai trò.
-- Khi user nói "thêm tính năng X" → `research-competitor`.
-- Khi **PO** nói "viết tài liệu tính năng / feature doc / UI preview" → `po-feature`.
-- Khi **Dev** nói "gen task" → `dev-task`. Khi **BE/AI** nói "push logic" → `push-logic`.
-- Khi user nói "xem tiến độ / vẽ dashboard" → `brain-dashboard`.
-- **Đọc trước khi hỏi = dedup:** trước khi escalate thắc mắc cho PO, BẮT BUỘC (a) đọc `feature.md` mục 7 + `logic/`,
-  (b) quét `questions/*.md` của tính năng, (c) `grep` `brain/ASK-LOG.md` cross-feature. Trùng & đã `answered` → trả lời lại, KHÔNG escalate.
-- Khi Tester/Dev/BE/AI **bí sau khi đọc docs** → skill **`ask-po`** (tạo `questions/<id>.md` + ghi `ASK-LOG`). Câu trả lời **chảy ngược** vào `feature.md` mục 7.
-- **Không tự commit git.** Commit/push → theo mục *"Commit / Push"* (xác nhận danh tính + ghi `PUSH-LOG.md`).
+## I. Ghi nhớ / Chốt phiên (tự học)
 
-## Ghi nhớ / Chốt phiên (tự học) — làm bộ não thông minh hơn
-
-Kích hoạt khi: user nói "ghi nhớ" / "cập nhật bộ não" / "chốt phiên"; HOẶC khi vừa chốt xong một
-việc/quyết định đáng kể (chủ động làm, không đợi nhắc).
-
-Rà lại cuộc trò chuyện, rút ra điều **bền vững & không hiển nhiên**, ghi đúng kho:
+Kích hoạt khi user nói "ghi nhớ" / "chốt phiên", HOẶC khi vừa chốt một việc/quyết định đáng kể.
+Rà cuộc trò chuyện, rút điều **bền vững & không hiển nhiên**, ghi đúng kho:
 
 | Loại bài học | Ghi vào | Phạm vi |
 |---|---|---|
-| Về DỰ ÁN: sản phẩm, đối thủ, quyết định | `brain/knowledge/` (+ cập nhật `INDEX.md`) | chung, qua git |
-| Về CÁCH LÀM VIỆC của user: sở thích, phản hồi, lằn ranh | memory riêng `~/.claude/.../memory/` (+ `MEMORY.md`) | riêng tư |
+| Về DỰ ÁN: sản phẩm, đối thủ, quyết định | `brain/knowledge/` (+ `INDEX.md`) | chung, qua git |
+| Về CÁCH LÀM VIỆC của user: sở thích, phản hồi, lằn ranh | memory riêng `~/.claude/.../memory/` | riêng tư |
 
-Nguyên tắc: chỉ lưu thứ phiên sau cần mà không suy ra được từ repo/git; dedup với cái đã có; viết
-ngắn gọn. Không lưu vụn vặt hay thứ chỉ đúng trong phiên này.
+Chỉ lưu thứ phiên sau cần mà không suy ra được từ repo/git; dedup với cái đã có; viết ngắn gọn.
 
-## Template `people/<user>.md`
+## J. Template `people/<user>.md`
 
 ```markdown
 ---
@@ -132,5 +173,5 @@ email: <email>
 ---
 # <Tên>
 - **Mảng phụ trách:** ...
-- **Sản phẩm đang làm:** [[<product-slug>]]
+- **Vai trò trong dự án:** xem bảng §C của skill `brain`.
 ```

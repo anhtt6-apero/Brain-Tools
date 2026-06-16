@@ -1,30 +1,37 @@
 # 🧠 Bộ não tư duy — Apero
 
 Đây là **bộ não thứ hai** local-first, git-tracked, dùng chung cho cả team khi làm product.
+**Dự án triển khai theo VERSION:** mỗi version = 1 folder trong `docs/`, bên trong chia theo 5 vai trò
+(`po_docs · tester · dev_mobile · be_docs · ai_docs`). `brain/` giữ luật + phân quyền + version + trí nhớ chung.
 Mỗi phiên làm việc, BẮT BUỘC làm theo skill `brain` trước khi làm gì khác.
 
 ## Khởi động mỗi phiên (đọc kỹ)
 
-1. **Nạp skill `brain`** trong `.claude/skills/brain/` — đó là sách hướng dẫn vận hành.
+1. **Nạp skill `brain`** trong `.claude/skills/brain/` — đó là bộ luật & phân quyền.
 2. **Xác định "tôi là ai":** chạy `git config user.email` → map tới `brain/people/<user>.md`.
    Lần đầu chưa có hồ sơ → **onboard**: hỏi tên + vai trò (`PO|Tester|Dev|BE|AI`) rồi tạo hồ sơ.
-3. **Đọc focus hiện tại:** `brain/state/<user>.json`.
-4. **Quét trí nhớ:** `brain/knowledge/INDEX.md`.
-5. **Phổ biến quyền theo vai trò:** nói rõ "bạn là ai + làm được gì trong dự án này" theo bảng
-   *Vai trò & quyền* trong skill `brain`.
+3. **Đọc version dự án đang chạy:** `brain/project.json` → `current_version` (tài liệu mới rơi vào version này).
+4. **Đọc focus hiện tại:** `brain/state/<user>.json`.
+5. **Quét trí nhớ chung:** `brain/knowledge/INDEX.md`.
+6. **Phổ biến quyền theo vai trò:** nói rõ "bạn là ai + ghi vào đâu + xem được gì + dùng skill/lệnh nào"
+   theo bảng *Vai trò, quyền & định tuyến* trong skill `brain`.
 
 ## Vai trò & skill tương ứng
 
-- **PO:** "viết tài liệu tính năng / feature doc / UI preview" → skill `po-feature` (gen `feature.md` + `ui/preview.html`).
-- **Tester:** đọc `feature.md` → sinh test case vào `tests/` _(skill riêng của Tester thêm sau)_.
-- **Dev:** "gen task" → skill `dev-task` (đọc `feature.md` → `tasks/<user>.md`).
-- **BE/AI:** "push logic" → skill `push-logic` (ghi `logic/<user>.md` để bên khác tham khảo).
-- **Bí sau khi đọc docs (mọi vai trò):** "không hiểu / thắc mắc về tính năng X" → skill `ask-po`: AI thử trả lời từ docs → **dedup** (mục 7 + `questions/` + `ASK-LOG`) → escalate cho PO (`questions/<id>.md` + `brain/ASK-LOG.md`). PO thấy qua dashboard/đầu phiên; câu trả lời **chảy ngược** vào `feature.md` mục 7 để khỏi ai hỏi lại.
+Mỗi vai trò ghi tài liệu vào folder của mình trong version hiện tại: `docs/<current_version>/<role>/`.
+
+- **PO** (`po_docs/`, xem TOÀN dự án): "viết tài liệu tính năng" → skill `po-feature`; quản `current_version`.
+- **Tester** (`tester/`): đọc `po_docs/` → sinh test case _(skill riêng của Tester thêm sau)_.
+- **Dev mobile** (`dev_mobile/`): "gen task" → skill `dev-task` (đọc `po_docs/` + logic BE/AI).
+- **BE** (`be_docs/`) **/ AI** (`ai_docs/`): "push logic" → skill `push-logic` để bên khác tham khảo.
+- **Bí sau khi đọc docs (mọi vai trò):** → skill `ask-po`: check docs version hiện tại → `brain/qa/` → docs version cũ → chưa có mới tạo QA (escalate cho PO).
 
 ## Khi user nói "muốn thêm tính năng X"
 
 → Chạy skill `research-competitor` (pipeline 5 bước: nhớ lại → hỏi gọn → nghiên cứu đối thủ
 bằng SensorTower + Meta Ads + web → báo cáo & đề xuất → ghi nhớ & cập nhật state).
+Lưu lại: research → `brain/research/`; **lý do làm / không làm** → `brain/knowledge/decisions/`;
+tính năng chốt làm → `docs/<current_version>/po_docs/`.
 
 ## Khi muốn xem tiến độ / "vẽ dashboard"
 
@@ -42,4 +49,4 @@ bằng SensorTower + Meta Ads + web → báo cáo & đề xuất → ghi nhớ &
 - `brain/dashboard/` được gitignore — mỗi người tự generate.
 - **Tự học:** cuối việc hoặc khi user nói "ghi nhớ" → lưu bài học (dự án → `knowledge/`, cách làm việc → memory). Xem mục "Ghi nhớ / Chốt phiên" trong skill `brain`.
 
-Chi tiết thiết kế: `docs/superpowers/specs/2026-06-14-bo-nao-tu-duy-design.md`.
+Chi tiết bộ luật & phân quyền: skill `brain` (`.claude/skills/brain/SKILL.md`). Version dự án: `brain/project.json`.
